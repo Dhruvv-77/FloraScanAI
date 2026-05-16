@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidAnalysis(data) {
+      return data.userId == request.auth.uid &&
+             data.imageUrl is string &&
+             data.analysisText is string &&
+             data.matchConfidence is int &&
+             data.healthScore is int &&
+             data.timestamp is timestamp;
+    }
+
+    match /analyses/{analysisId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && 
+                    isValidId(analysisId) && 
+                    isValidAnalysis(request.resource.data) &&
+                    request.resource.data.timestamp == request.time;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "entities": {
+    "leafAnalysis": {
+      "title": "Leaf Analysis",
+      "description": "Historical record of an analyzed leaf",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "analysisText": { "type": "string" },
+        "matchConfidence": { "type": "integer" },
+        "healthScore": { "type": "integer" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "imageUrl", "analysisText", "matchConfidence", "healthScore", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/analyses/{analysisId}": {
+      "schema": "leafAnalysis",
+      "description": "Collection of all leaf analyses conducted by users"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "FloraScan",
+  "description": "Expert AI system for leaf identification, disease analysis, and plant care recommendations. Upload a photo of a leaf to get detailed insights.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": []
+}
